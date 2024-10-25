@@ -1,4 +1,4 @@
-import { corsProxy, issuesURL } from "./config";
+import { corsProxy, issuesURL, baseRegexToFindTargeURL } from "./config";
 
 // On redirige vers l'URL correspondante
 export async function goToTargetURL(targetID) {
@@ -11,7 +11,7 @@ export async function goToTargetURL(targetID) {
 		}
 
 		const html = await response.text();
-		const regex = "<title>(.*?) \\(#" + targetID;
+		const regex = baseRegexToFindTargeURL + targetID;
 		const titleElement = html.match(regex);
 
 		let targetURL;
