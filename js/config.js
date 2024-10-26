@@ -7,6 +7,9 @@ const issuesURLGitlab =
 const issuesURLGithub = "https://github.com/eyssette/url/issues/";
 
 export const issuesURL = isGithub ? issuesURLGithub : issuesURLGitlab;
+export const newIssueURL = isGithub
+	? issuesURLGithub + "new?title="
+	: issuesURLGitlab + "new?issue[title]=";
 
 const stringIssueGitlab = " \\(#";
 const stringIssueGithub = " · Issue #";
