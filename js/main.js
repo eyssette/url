@@ -1,3 +1,4 @@
+import "../css/styles.css";
 import { toNumber } from "./utils";
 import { goToTargetURL } from "./goToTargetURL";
 import { displayHomepage } from "./displayHomepage";
