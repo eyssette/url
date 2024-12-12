@@ -14,4 +14,4 @@ export const newIssueURL = isGithub
 const stringIssueGitlab = " \\(#";
 const stringIssueGithub = " · Issue #";
 const stringIssue = isGithub ? stringIssueGithub : stringIssueGitlab;
-export const baseRegexToFindTargeURL = "<title>(.*?)" + stringIssue;
+export const baseRegexToFindTargetURL = "<title>(.*?)" + stringIssue;
