@@ -1,26 +1,33 @@
-import { corsProxy, issuesURL, baseRegexToFindTargetURL } from "./config";
+import { isGithub, issuesURLGitlabAPI, issuesURLGithubAPI } from "./config";
+
+function filterJson(element, targetID) {
+	return isGithub ? element.number == targetID : element.iid == targetID;
+}
 
 // On redirige vers l'URL correspondante
 export async function goToTargetURL(targetID) {
-	const url = corsProxy + issuesURL + targetID;
+	const url = isGithub ? issuesURLGithubAPI : issuesURLGitlabAPI;
 
-	try {
-		const response = await fetch(url);
-		if (!response.ok) {
-			throw new Error(`HTTP error! Status: ${response.status}`);
-		}
-
-		const html = await response.text();
-		const regex = baseRegexToFindTargetURL + targetID;
-		const titleElement = html.match(regex);
-
-		let targetURL;
-		if (titleElement) {
-			targetURL = titleElement[1].trim();
-		}
-		window.location.href = targetURL;
-	} catch (error) {
-		console.error("Erreur lors de la récupération de l'issue :", error);
-		return null;
-	}
+	fetch(url, {
+		method: "GET",
+		headers: {
+			Accept: "application/json",
+		},
+	})
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+			return response.json();
+		})
+		.then((json) => {
+			const target = json.filter((element) => filterJson(element, targetID));
+			if (target.length > 0) {
+				const targetURL = target[0].title;
+				window.location.href = targetURL;
+			}
+		})
+		.catch((error) => {
+			console.error("Error fetching data:", error);
+		});
 }
