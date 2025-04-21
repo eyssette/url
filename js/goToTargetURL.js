@@ -1,12 +1,10 @@
 import { isGithub, issuesURLGitlabAPI, issuesURLGithubAPI } from "./config";
 
-function filterJson(element, targetID) {
-	return isGithub ? element.number == targetID : element.iid == targetID;
-}
-
 // On redirige vers l'URL correspondante
 export async function goToTargetURL(targetID) {
-	const url = isGithub ? issuesURLGithubAPI : issuesURLGitlabAPI;
+	const url = isGithub
+		? issuesURLGithubAPI + targetID
+		: issuesURLGitlabAPI + targetID;
 
 	fetch(url, {
 		method: "GET",
@@ -21,9 +19,8 @@ export async function goToTargetURL(targetID) {
 			return response.json();
 		})
 		.then((json) => {
-			const target = json.filter((element) => filterJson(element, targetID));
-			if (target.length > 0) {
-				const targetURL = target[0].title;
+			if (json) {
+				const targetURL = json.title;
 				window.location.href = targetURL;
 			}
 		})
